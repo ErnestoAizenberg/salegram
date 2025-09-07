@@ -1,0 +1,21 @@
+{
+  "SECRET_KEY": "dev-secret-key-change-in-production",
+  "DEBUG": true,
+  "ALLOWED_HOSTS": ["localhost", "127.0.0.1"],
+  "LANGUAGE_CODE": "ru-ru",
+  "TIME_ZONE": "Europe/Moscow",
+  "DATABASE": {
+    "ENGINE": "django.db.backends.sqlite3",
+    "NAME": "db.sqlite3"
+  },
+  "CELERY": {
+    "BROKER_URL": "redis://localhost:6379/0",
+    "RESULT_BACKEND": "django-db"
+  },
+  "TELEGRAM": {
+    "BOT_TOKEN": "",
+    "ADMIN_CHAT_IDS": []
+  },
+  "REDIS_URL": "redis://localhost:6379/0",
+  "DATABASE_URL": "sqlite:///db.sqlite3"
+}
