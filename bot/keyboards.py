@@ -28,7 +28,7 @@ def product_detail_keyboard(product_id):
 
 def payment_methods_keyboard(order_id):
     keyboard = [
-        [InlineKeyboardButton("💳 Банковская карта", callback_data=f'pay_card_{order_id}')],
+       # [InlineKeyboardButton("💳 Банковская карта", callback_data=f'pay_card_{order_id}')],
         [InlineKeyboardButton("📱 Криптовалюта", callback_data=f'pay_crypto_{order_id}')],
         [InlineKeyboardButton("❌ Отмена", callback_data='cancel_payment')]
     ]
