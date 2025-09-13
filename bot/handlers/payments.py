@@ -5,6 +5,11 @@ from asgiref.sync import sync_to_async
 from ..models import Product, Order, UserProfile
 from ..keyboards import payment_methods_keyboard, main_menu_keyboard
 
+from bot.config import raw_config
+from bot.templates import Templates
+
+templates = Templates(raw_config)
+
 # Асинхронные обертки для ORM-методов
 @sync_to_async
 def get_product_with_price(product_id):
@@ -60,15 +65,7 @@ async def initiate_payment(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_id = query.from_user.id
         order = await create_order_with_product(user_id, product)
 
-        payment_text = f"""
-        🛒 Оформление заказа
-
-        Товар: {product.name}
-        Цена: {product.price} руб.
-
-        Выберите способ оплаты:
-        """
-
+        payment_text = templates.order_created(product.name, product.price)
         await query.edit_message_text(
             payment_text,
             reply_markup=payment_methods_keyboard(order.id)
@@ -93,28 +90,9 @@ async def process_payment(update: Update, context: ContextTypes.DEFAULT_TYPE):
         product_price = order.product.price
 
         if payment_method == 'card':
-            payment_info = f"""
-            💳 Оплата банковской картой:
-
-            Номер карты: 1234 5678 9012 3456
-            Получатель: Иван Иванов
-            Сумма: {product_price} руб.
-
-            После оплаты отправьте скриншот чека @admin_username
-            """
-
+            payment_info = templates.payment_card(product_price)
         elif payment_method == 'crypto':
-            payment_info = f"""
-            📱 Оплата криптовалютой:
-
-            BTC адрес: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
-            ETH адрес: 0x742d35Cc6634C0532925a3b844Bc454e4438f44e
-            USDT (TRC20): TAbnT7PkYjLPz6bLpWnq6mLmXyX2n2n2n2
-
-            Сумма: {product_price} руб. (конвертируйте по курсу на момент оплаты)
-
-            После оплаты отправьте хэш транзакции @admin_username
-            """
+            payment_info = templates.payment_crypto(product_price)
 
         await save_order_payment_data(order.id, payment_method)
 
