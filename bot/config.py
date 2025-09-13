@@ -69,5 +69,10 @@ class Config:
         """Получить ID администраторов"""
         return self.bot.get('admin_ids', [])
 
+
+config_path = Path(__file__).parent / 'config.yaml'
+with open(config_path, 'r', encoding='utf-8') as f:
+    raw_config = yaml.safe_load(f) or {}
+
 # Глобальный экземпляр конфига
 config = Config()
